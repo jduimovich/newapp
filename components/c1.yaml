@@ -1,0 +1,21 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: newapp-c1
+  namespace: openshift-gitops 
+  finalizers: ["resources-finalizer.argocd.argoproj.io"] 
+spec:
+  project: default
+  source:
+    path: components/c1/overlays/development
+    repoURL: https://github.com/jduimovich/newapp.git
+    targetRevision: main
+  destination:
+    namespace: newapp-ns
+    server: https://kubernetes.default.svc
+  syncPolicy:
+    automated: 
+      prune: true
+      selfHeal: true
+    syncOptions:
+    - CreateNamespace=true
